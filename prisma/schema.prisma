@@ -1,0 +1,104 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("EMPLOYEE") // EMPLOYEE, OWNER, ADMIN
+  department    String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  assets        Asset[]
+  usageHistory  UsageHistory[]
+  reviews       Review[]
+}
+
+model Asset {
+  id            String    @id @default(cuid())
+  title         String
+  description   String
+  category      String
+  status        String    @default("DRAFT") // DRAFT, PENDING, PUBLISHED
+  version       String
+  githubUrl     String?
+  
+  // Qualifications
+  qaReviewed    Boolean   @default(false)
+  qaReviewUrl   String?
+  legalReviewed Boolean   @default(false)
+  legalReviewUrl String?
+
+  ownerId       String
+  owner         User      @relation(fields: [ownerId], references: [id])
+
+  versions      AssetVersion[]
+  usageHistory  UsageHistory[]
+  reviews       Review[]
+  
+  views         Int       @default(0)
+  likes         Int       @default(0)
+  usageCount    Int       @default(0)
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  attachments   AssetAttachment[]
+}
+
+model AssetAttachment {
+  id        String   @id @default(cuid())
+  assetId   String
+  url       String
+  type      String   // IMAGE, DOCUMENT, etc.
+  name      String
+  size      Int
+  createdAt DateTime @default(now())
+  
+  asset     Asset    @relation(fields: [assetId], references: [id], onDelete: Cascade)
+}
+
+model AssetVersion {
+  id        String   @id @default(cuid())
+  version   String
+  changes   String?
+  assetId   String
+  asset     Asset    @relation(fields: [assetId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model UsageHistory {
+  id        String   @id @default(cuid())
+  assetId   String
+  userId    String
+  date      DateTime @default(now())
+  status    String   @default("REQUESTED") // REQUESTED, APPROVED
+  
+  asset     Asset    @relation(fields: [assetId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  assetId   String
+  userId    String
+  rating    Int
+  comment   String?
+  createdAt DateTime @default(now())
+
+  asset     Asset    @relation(fields: [assetId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
