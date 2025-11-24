@@ -1,0 +1,47 @@
+# Project: In-House Software Catalog System
+
+## Phase 1: Planning & Setup
+- [x] Project Initialization & Planning
+    - [x] Check workspace
+    - [x] Create [implementation_plan.md](file:///C:/Users/SDS/.gemini/antigravity/brain/5d97b06c-266d-42f4-86de-203848483ff9/implementation_plan.md)
+    - [x] Review plan with User
+- [x] Project Scaffolding
+    - [x] Initialize Next.js App
+    - [x] Setup Tailwind CSS & Shadcn/UI
+    - [x] Setup Database (Prisma + SQLite/Postgres)
+
+## Phase 2: Core Features Implementation
+- [x] Authentication & User Management
+    - [x] Setup Auth (NextAuth.js)
+    - [x] User Roles (Employee, Owner, Admin)
+- [/] Catalog Management (Asset Owner)
+    - [x] Asset Registration Form
+    - [x] Asset Modification & Versioning
+    - [x] File Upload (Images, Attachments)
+- [x] Approval Workflow (Admin)
+    - [x] Admin Dashboard
+    - [x] Approval/Rejection Logic
+- [ ] Catalog Discovery (Employee)
+    - [ ] Catalog Card View (Search, Filter, Sort)
+    - [ ] Asset Detail Page
+    - [ ] Usage Request Flow
+    - [ ] Reviews & Ratings
+
+## Phase 3: Analytics & Dashboard
+- [ ] Dashboard Implementation
+    - [ ] Usage Statistics (Monthly/Quarterly/Yearly)
+    - [ ] Effect Amount Calculation
+- [ ] Notifications
+    - [ ] Subscription System
+    - [ ] Notification Center
+
+## Phase 4: AI Integration
+- [ ] AI QnA System
+    - [ ] RAG Setup for Policy MD files
+    - [ ] Asset QnA
+- [ ] Recommendation Engine
+    - [ ] Basic Recommendation Logic
+
+## Phase 5: Polish & Verification
+- [ ] UI/UX Polish (ServiceNow Style)
+- [ ] Verification & Testing

@@ -1,0 +1,35 @@
+# Walkthrough - In-House Software Catalog System
+
+## Completed Features
+- **Project Scaffolding**: Initialized Next.js 14 app with TypeScript, Tailwind CSS, and Shadcn/UI.
+- **Database**: Set up SQLite with Prisma ORM.
+- **Authentication**: Implemented NextAuth.js with Credentials provider and Prisma adapter.
+- **UI**: Added a responsive Navbar with Login/Logout functionality.
+
+## Verification Steps
+
+### 1. Start the Application
+Run the development server:
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+### 2. Verify Authentication
+1. Click "Sign In" in the Navbar.
+2. Enter any email (e.g., `test@example.com`) and password.
+3. Since we are in Dev mode with auto-registration, you should be redirected to the home page.
+4. Verify that your email and role (EMPLOYEE) are displayed in the Navbar.
+5. Click "Sign Out" to verify logout.
+
+![Authentication Verification Flow](file:///C:/Users/SDS/.gemini/antigravity/brain/5d97b06c-266d-42f4-86de-203848483ff9/auth_verification_1763949841708.webp)
+
+### 3. Database Verification
+You can inspect the SQLite database to see the created user:
+```bash
+npx prisma studio
+```
+
+## Next Steps
+- Implement Catalog Management (Asset Registration).
+- Build the Discovery UI.

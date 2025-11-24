@@ -1,0 +1,98 @@
+# Implementation Plan - In-House Software Catalog System
+
+## Goal Description
+Build a modern, internal Software Catalog System to facilitate the discovery, sharing, and reuse of in-house software assets among employees. The system will support asset registration, versioning, approval workflows, usage tracking, and AI-driven QnA/Recommendations.
+
+## User Review Required
+> [!IMPORTANT]
+> **Database Selection**: I am proposing **SQLite** for the initial development phase for simplicity and zero-config setup. It can be easily switched to PostgreSQL later via Prisma. Please confirm if this is acceptable.
+
+> [!NOTE]
+> **AI Integration**: I will structure the app to use OpenAI's API for the QnA and Recommendation features. You will need to provide an API Key later.
+
+## Proposed Tech Stack
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS + Shadcn/UI (for the premium, modern ServiceNow-like aesthetic)
+- **Database**: SQLite (via Prisma ORM)
+- **Authentication**: NextAuth.js (Credentials flow for prototype, extensible to SSO)
+- **Icons**: Lucide React
+
+## Proposed Changes
+
+### 1. Project Scaffolding
+#### [NEW] [Project Structure]
+- Initialize Next.js app with `create-next-app`.
+- Configure Tailwind CSS and Shadcn/UI.
+- Set up Prisma with SQLite.
+
+### 2. Database Schema (Prisma)
+#### [NEW] [schema.prisma](file:///d:/dev/catalog/prisma/schema.prisma)
+- **User**: [id](file:///d:/dev/catalog/src/components/providers/session-provider.tsx#5-8), `email`, `name`, `role` (EMPLOYEE, OWNER, ADMIN), `department`.
+- **Asset**: [id](file:///d:/dev/catalog/src/components/providers/session-provider.tsx#5-8), `title`, `description` (Overview, Features, etc.), `category`, `status` (DRAFT, PENDING, PUBLISHED), `version`, `githubUrl`, `ownerId`.
+    - **Qualifications**: `qaReviewed` (Boolean), `qaReviewUrl` (String), `legalReviewed` (Boolean), `legalReviewUrl` (String).
+- **AssetVersion**: To track history/versions.
+- **UsageHistory**: [id](file:///d:/dev/catalog/src/components/providers/session-provider.tsx#5-8), `assetId`, `userId`, `date`, `status` (REQUESTED, APPROVED).
+- **Review**: [id](file:///d:/dev/catalog/src/components/providers/session-provider.tsx#5-8), `assetId`, `userId`, `rating`, `comment`.
+- **Stats**: `views`, `likes`, `usageCount`.
+
+### 3. Core Features
+#### [NEW] [Authentication]
+- Implement Login page.
+- Protect routes based on Roles.
+
+#### [NEW] [Catalog Management]
+- **Asset Registration/Edit Form**: Multi-step form for detailed asset info.
+- **My Assets Dashboard**: For Owners to manage their submissions.
+
+### Asset Registration
+#### [NEW] [page.tsx](file:///d:/dev/catalog/src/app/assets/new/page.tsx)
+#### [NEW] [route.ts](file:///d:/dev/catalog/src/app/api/assets/route.ts)
+
+### Asset Modification & Versioning
+#### [NEW] [page.tsx](file:///d:/dev/catalog/src/app/assets/[id]/edit/page.tsx)
+#### [NEW] [route.ts](file:///d:/dev/catalog/src/app/api/assets/[id]/route.ts)
+#### [NEW] [route.ts](file:///d:/dev/catalog/src/app/api/assets/[id]/versions/route.ts)
+
+#### [NEW] [route.ts](file:///d:/dev/catalog/src/app/api/assets/[id]/versions/route.ts)
+
+### File Upload
+#### [NEW] [schema.prisma](file:///d:/dev/catalog/prisma/schema.prisma)
+- **AssetAttachment**: [id](file:///d:/dev/catalog/src/components/providers/session-provider.tsx#5-8), `assetId`, `url`, `type`, `name`, `size`.
+
+#### [NEW] [route.ts](file:///d:/dev/catalog/src/app/api/upload/route.ts)
+- Handles [POST](file:///d:/dev/catalog/src/app/api/assets/route.ts#8-68) with `multipart/form-data`.
+- Saves files to `public/uploads`.
+
+#### [MODIFY] [page.tsx](file:///d:/dev/catalog/src/app/assets/new/page.tsx)
+- Add file upload UI.
+
+#### [NEW] [Discovery & Usage]
+- **Catalog Feed**: Card-based layout with filters (Category, Popularity).
+- **Asset Detail Page**: Rich display of metadata, markdown rendering for docs.
+- **Usage Request**: Simple flow to request access.
+
+#### [NEW] [Admin Console]
+- **Approval Queue**: List of pending assets.
+- **Dashboard**: High-level metrics.
+
+### 4. AI & Analytics
+#### [NEW] [AI Service]
+- **QnA Bot**: Chat interface using Mock Objects (simulated responses) initially. Future integration with OpenAI/RAG.
+- **Recommendation**: Mock logic to suggest assets. Future integration with AI.
+
+## Verification Plan
+
+### Automated Tests
+- **Unit Tests**: Jest/Vitest for utility functions and API logic.
+- **E2E Tests**: Playwright (optional for later) to verify critical flows (Login -> Register Asset -> Admin Approve).
+
+### Manual Verification
+1. **Setup**: Run `npm run dev` and ensure the app loads.
+2. **Auth**: Log in as different users (Admin, Owner, Employee).
+3. **Flow**:
+    - **Owner**: Register a new Asset. Check if it appears in "My Assets".
+    - **Admin**: Approve the asset.
+    - **Employee**: Browse catalog, see the new asset, "Request Use".
+    - **Owner**: See the usage count increase.
+4. **AI**: Upload a policy MD file and ask the QnA bot a question about it.
