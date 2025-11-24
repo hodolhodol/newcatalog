@@ -48,6 +48,10 @@
     - [x] Navbar & Layout
     - [x] Home Page Polish
     - [x] Asset Detail Page Polish
-- [/] Verification & Testing
-    - [/] Automated API Tests
+- [x] GitHub Repository Setup
+    - [x] Documentation files copied to `.docs`
+    - [x] Repository created and pushed to `hodolhodol/newcatalog`
+    - [x] Setup guide created
+- [ ] Verification & Testing
+    - [ ] Automated API Tests
     - [ ] Manual UI Walkthrough
